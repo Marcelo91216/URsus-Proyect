@@ -8,3 +8,13 @@
 - Aarón Francisco Urbina De la Cruz A01283736
 - Maria Fernanda Cantú Pulido A01283983
 
+### Uso de la API
+En la version inicial se está experimentando con la API de VirusTotal
+por lo que por ahora el comando para inicial el programa y dar un valor de inicio es
+```shell
+python3 ./main.py <url>
+```
+Un ejemplo aqui 
+```shell
+ python3 ./main.py https://www.wikidex.net/wiki/WikiDex
+```

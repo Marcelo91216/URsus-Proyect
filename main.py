@@ -14,13 +14,13 @@ elif 'APIKEY' in os.environ:
     # connection to API with a client
     try:
         client = vt.Client(str(os.getenv('APIKEY')))
-
+        
         # get information about an URL
         info = client.get_object("/urls/{}".format(vt.url_id(url)))
         print(info.last_analysis_stats)
 
         analysis = client.scan_url(url)
-        print(analysis.context_attributes)
+        print(analysis)
 
         client.close() # always close session
     except NameError:

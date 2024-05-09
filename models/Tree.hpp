@@ -1,8 +1,10 @@
 #pragma once
-#include <Node.hpp>
 #include <string>
-#include <Grammar.hpp>
-class Tree
+#include <queue>
+#include <iostream>
+#include "Node.hpp"
+#include "Grammar.hpp"
+ class Tree
 {
 public:
     Tree();
@@ -21,13 +23,13 @@ Tree::Tree()
 
 void Tree::print()
 {
-    queue<Node *> qu;
+    std::queue<Node *> qu;
     qu.push(root);
     while (!qu.empty())
     {
         Node *temp = qu.front();
         qu.pop();
-        cout << "(" << temp->getV() << ", " << temp->getT() << ") ";
+        std::cout << "(" << temp->getV() << ", " << temp->getT() << ") ";
         if (temp->getL() != nullptr)
         {
             qu.push(temp->getL());
@@ -37,7 +39,7 @@ void Tree::print()
             qu.push(temp->getR());
         }
     }
-    cout << endl;
+    std::cout << std::endl;
 }
 
 void Tree::insert(std::string v)
@@ -50,7 +52,7 @@ void Tree::insert(std::string v)
         {
             if (current->getR() == nullptr)
             {
-                current->setRight(new Node(".", "dot", "latin", nullptr, nullptr));
+                current->setRight(new Node(".", "dot", "", nullptr, nullptr));
             }
             current = current->getR();
         }
@@ -58,27 +60,14 @@ void Tree::insert(std::string v)
         {
             if (current->getR() == nullptr)
             {
-                current->setRight(new Node("/", "slash", "latin", nullptr, nullptr));
+                current->setRight(new Node("/", "slash", "", nullptr, nullptr));
             }
             current = current->getR();
         }
         else
         {
-            std::string alphabet = "latin";
-            if (v[i] >= 0 && v[i] <= 127)
-            {
-                alphabet = "latin";
-            }
-            else if (v[i] >= 0x0400 && v[i] <= 0x04FF)
-            {
-                alphabet = "cyrillic";
-            }
-            else if (v[i] >= 0x0600 && v[i] <= 0x06FF)
-            {
-                alphabet = "arabic";
-            }
-            else
-
+            URLGrammar grammar;
+            std::string alphabet = grammar.getCharacterAlphabet(v[i]);
             if (current->getL() == nullptr)
             {
                 current->setLeft(new Node(std::string(1, v[i]), "char", alphabet, nullptr, nullptr));
@@ -87,6 +76,8 @@ void Tree::insert(std::string v)
         }
     }
 }
+
+
 bool Tree::isValidURL(const std::string &url)
 {
     URLGrammar grammar;

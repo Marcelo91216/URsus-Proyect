@@ -21,7 +21,6 @@ public:
     std::string getT() { return this->t; }
     Node *getL() { return this->l; }
     Node *getR() { return this->r; }
-    std::string getAlphabet() { return this->alphabet; }
 
     Node()
     {

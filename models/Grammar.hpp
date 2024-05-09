@@ -5,8 +5,6 @@ class URLGrammar
 {
 public:
     bool isValidURL(const std::string &url);
-
-private:
     bool parseURL(const std::string &url, int &pos);
     bool parseScheme(const std::string &url, int &pos);
     bool parseAuthority(const std::string &url, int &pos);
@@ -30,25 +28,37 @@ bool URLGrammar::parseURL(const std::string &url, int &pos)
 
 bool URLGrammar::parseScheme(const std::string &url, int &pos)
 {
-    // Implementación para analizar el esquema de la URL
+    int start = pos;
+    while (pos < url.length() && (isalpha(url[pos]) || isdigit(url[pos]) || url[pos] == '+' || url[pos] == '-' || url[pos] == '.'))
+        pos++;
+    return pos > start;
 }
 
 bool URLGrammar::parseAuthority(const std::string &url, int &pos)
 {
-    // Implementación para analizar la autoridad de la URL
+    int start = pos;
+    while (pos < url.length() && url[pos] != '/')
+        pos++;
+    return pos > start;
 }
 
 bool URLGrammar::parsePath(const std::string &url, int &pos)
 {
-    // Implementación para analizar la ruta de la URL
+    int start = pos;
+    while (pos < url.length() && url[pos] != '?' && url[pos] != '#')
+        pos++;
+    return pos > start;
 }
 
 bool URLGrammar::parseQuery(const std::string &url, int &pos)
 {
-    // Implementación para analizar la consulta de la URL
+    int start = pos;
+    while (pos < url.length() && url[pos] != '#')
+        pos++;
+    return pos > start;
 }
 
 bool URLGrammar::parseFragment(const std::string &url, int &pos)
 {
-    // Implementación para analizar el fragmento de la URL
+    return pos < url.length();
 }

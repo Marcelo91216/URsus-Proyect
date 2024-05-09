@@ -16,6 +16,7 @@ public:
     void setRight(Node *r) { this->r = r; }
     void setAlphabet(std::string alphabet) { this->alphabet = alphabet; }
 
+    std::string getAlphabet() { return this->alphabet; }
     std::string getV() { return this->v; }
     std::string getT() { return this->t; }
     Node *getL() { return this->l; }
@@ -26,14 +27,16 @@ public:
     {
         v = "";
         t = "";
+        alphabet = "";
         l = nullptr;
         r = nullptr;
     };
 
-    Node(std::string v, std::string t, Node *l, Node *r)
+    Node(std::string v, std::string t, std::string alphabet, Node *l, Node *r)
     {
         this->v = v;
         this->t = t;
+        this->alphabet = alphabet;
         this->l = l;
         this->r = r;
     };

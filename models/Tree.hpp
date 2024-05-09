@@ -16,7 +16,7 @@ private:
 
 Tree::Tree()
 {
-    root = new Node("://", "protocol", nullptr, new Node(".", "dot", nullptr, new Node(".", "dot", nullptr, new Node("/", "slash", nullptr, nullptr))));
+    root = new Node("://", "protocol", "", nullptr, new Node(".", "dot", "" ,nullptr, new Node(".", "dot", "", nullptr, new Node("/", "slash", "",nullptr, nullptr))));
 }
 
 void Tree::print()
@@ -50,7 +50,7 @@ void Tree::insert(std::string v)
         {
             if (current->getR() == nullptr)
             {
-                current->setRight(new Node(".", "dot", nullptr, nullptr));
+                current->setRight(new Node(".", "dot", "latin", nullptr, nullptr));
             }
             current = current->getR();
         }
@@ -58,15 +58,30 @@ void Tree::insert(std::string v)
         {
             if (current->getR() == nullptr)
             {
-                current->setRight(new Node("/", "slash", nullptr, nullptr));
+                current->setRight(new Node("/", "slash", "latin", nullptr, nullptr));
             }
             current = current->getR();
         }
         else
         {
+            std::string alphabet = "latin";
+            if (v[i] >= 0 && v[i] <= 127)
+            {
+                alphabet = "latin";
+            }
+            else if (v[i] >= 0x0400 && v[i] <= 0x04FF)
+            {
+                alphabet = "cyrillic";
+            }
+            else if (v[i] >= 0x0600 && v[i] <= 0x06FF)
+            {
+                alphabet = "arabic";
+            }
+            // Add more conditions for other alphabets
+
             if (current->getL() == nullptr)
             {
-                current->setLeft(new Node(std::string(1, v[i]), "char", nullptr, nullptr));
+                current->setLeft(new Node(std::string(1, v[i]), "char", alphabet, nullptr, nullptr));
             }
             current = current->getL();
         }

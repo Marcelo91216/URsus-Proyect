@@ -4,7 +4,7 @@
 #include <iostream>
 #include "Node.hpp"
 #include "Grammar.hpp"
- class Tree
+class Tree
 {
 public:
     Tree();

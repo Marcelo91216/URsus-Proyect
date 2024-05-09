@@ -77,7 +77,7 @@ void Tree::insert(std::string v)
             {
                 alphabet = "arabic";
             }
-            // Add more conditions for other alphabets
+            else
 
             if (current->getL() == nullptr)
             {

@@ -14,12 +14,12 @@ elif "APIKEY" in os.environ:
     try:
         is_valid = model.is_valid_url(url)
         client = vt.Client(str(os.getenv("APIKEY")))
+        
 
         info = client.get_object("/urls/{}".format(vt.url_id(url)))
         print(info.last_analysis_stats)
 
-        analysis = client.scan_url(url)
-        print(analysis)
+        analysis = model.analyze_url(url)
 
         print(
             f"La URL es {'válida' if is_valid else 'inválida'} según el validador de C++."

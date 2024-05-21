@@ -3,7 +3,7 @@ import vt
 from dotenv import load_dotenv
 import os
 import sys
-import model
+import modelSUS as model
 
 load_dotenv()
 

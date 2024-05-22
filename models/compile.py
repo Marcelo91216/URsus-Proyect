@@ -1,8 +1,12 @@
 # Se requiere setuptools para compilar la extensión
 # pip install setuptools
 # Se corre el archivo con el siguiente comando
-# Asumnido que se está en la carpeta raiz del proyecto
-# python models/compile.py build_ext --inplace
+# Adumiendo que se está en la carpeta models
+# python compile.py build_ext --inplace
+
+# Adicionalmente puedes hacer la compilacion sin este programa:
+# g++ -shared -fPIC -o modelSUS.so model.cpp -I/path/to/directory/pythonX.X
+# Donde X es la versión de Python que estás utilizando
 from setuptools import setup, Extension
 
 module = Extension(

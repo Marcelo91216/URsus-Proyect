@@ -1,24 +1,75 @@
 import React, { useState } from 'react';
 import './App.css';
 import logo from './ursus.png';
+import ResultModal from './ResultModal';
 
 const API_BASE_URL = 'http://localhost:5000';
 
 function App() {
   const [url, setUrl] = useState('');
   const [result, setResult] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch(`${API_BASE_URL}/analyze`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ url }),
-    });
-    const data = await response.json();
-    setResult(data);
+    try {
+      const response = await fetch(`${API_BASE_URL}/analyze`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ url }),
+      });
+      if (!response.ok) {
+        throw new Error('Error en la solicitud');
+      }
+      const data = await response.json();
+      setResult(data);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const renderAnalysisInterpretation = () => {
+    if (!result) return null;
+
+    const { is_valid, last_analysis_stats } = result;
+
+    let homographicAttackInterpretation = '';
+    if (is_valid) {
+      homographicAttackInterpretation = 'La URL no tiene un ataque homográfico.';
+    } else {
+      homographicAttackInterpretation = 'La URL tiene un ataque homográfico.';
+    }
+
+    let reputationInterpretation = '';
+    if (last_analysis_stats.reputation < 0) {
+      reputationInterpretation = 'La URL tiene una mala reputación dentro de la comunidad de VirusTotal.';
+    } else if (last_analysis_stats.reputation === 0) {
+      reputationInterpretation = 'La URL no ha sido evaluada por la comunidad de VirusTotal.';
+    } else if (last_analysis_stats.reputation > 0 && last_analysis_stats.reputation < 100) {
+      reputationInterpretation = 'La URL tiene una buena reputación por una pequeña parte de la comunidad.';
+    } else {
+      reputationInterpretation = 'La URL tiene una buena reputación en la comunidad.';
+    }
+
+    let analysisInterpretation = '';
+    const { harmless, suspicious, undetected, malicious } = last_analysis_stats.analysis;
+    if (harmless > suspicious + undetected + malicious) {
+      analysisInterpretation = 'El análisis de VirusTotal no encontró ningún elemento sospechoso.';
+    } else if (suspicious + undetected > malicious) {
+      analysisInterpretation = 'El elemento posiblemente sea malicioso.';
+    } else {
+      analysisInterpretation = 'El elemento es malicioso.';
+    }
+
+    return (
+      <div>
+        <p>{homographicAttackInterpretation}</p>
+        <p>{reputationInterpretation}</p>
+        <p>{analysisInterpretation}</p>
+      </div>
+    );
   };
 
   return (
@@ -64,16 +115,22 @@ function App() {
                 <div className="content">
                   <span className="title">Más información sobre la URL</span>
                   <p className="message">Estadísticas del último análisis:</p>
-                  <pre>{JSON.stringify(result.last_analysis_stats, null, 2)}</pre>
+                  {renderAnalysisInterpretation()}
                 </div>
                 <div className="actions">
-                  <button className="desactivate" type="button">
+                  <button className="desactivate" type="button" onClick={() => setShowModal(true)}>
                     Conocer más detalles
                   </button>
                 </div>
               </div>
             </div>
           </div>
+          {showModal && (
+            <ResultModal
+              result={result}
+              onClose={() => setShowModal(false)}
+            />
+          )}
         </>
       )}
     </div>

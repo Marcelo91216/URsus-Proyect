@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import vt
 from dotenv import load_dotenv
 import os
@@ -6,6 +7,7 @@ import asyncio
 import modelSUS as model
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/analyze', methods=['POST'])
 def analyze_url():

@@ -1,27 +1,39 @@
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 import vt
 from dotenv import load_dotenv
 import os
-import sys
+import asyncio
+import modelSUS as model
 
-load_dotenv()
+app = Flask(__name__)
+CORS(app)
 
-url = str()
-if len(sys.argv)<2:
-    print("Por favor introduzca un valor")
-    # check if api key exists
-elif 'APIKEY' in os.environ:
-    url = sys.argv[1]
-    # connection to API with a client
-    try:
-        client = vt.Client(str(os.getenv('APIKEY')))
+@app.route('/analyze', methods=['POST'])
+def analyze_url():
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    url = request.json['url']
+    is_valid = model.is_valid_url(url)
+    client = vt.Client(str(os.getenv("APIKEY")))
+    info = client.get_object("/urls/{}".format(vt.url_id(url)))
+    analysis = model.analyze_url(url)
+    analysis_dict = {
+        'reputation': info.reputation,
+        'votes': info.total_votes.data,
+        'analysis': info.last_analysis_stats.data,
         
-        # get information about an URL
-        info = client.get_object("/urls/{}".format(vt.url_id(url)))
-        print(info.last_analysis_stats)
+    }
+    result = {
+        'is_valid': is_valid,
+        'last_analysis_stats': analysis_dict,
+        'analysis': analysis
+    }
+    client.close()
+    loop.close()
+    return jsonify(result)
 
-        analysis = client.scan_url(url)
-        print(analysis)
 
-        client.close() # always close session
-    except NameError:
-        print(NameError)
+if __name__ == '__main__':
+    load_dotenv()
+    app.run()

@@ -55,7 +55,7 @@ static PyObject *analyze_url(PyObject *self, PyObject *args)
     // Obtener el contenido del stringstream como una cadena
     std::string result = buffer.str();
 
-    return PyUnicode_FromString(result.c_str());
+    return PyUnicode_DecodeUTF8(result.c_str(), result.size(), "replace");
 }
 
 static PyMethodDef ModelMethods[] = {

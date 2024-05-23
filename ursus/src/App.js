@@ -3,7 +3,7 @@ import './App.css';
 import logo from './ursus.png';
 import ResultModal from './ResultModal';
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = 'https://2906-2806-108e-13-4250-d9c3-c01-9edb-2fb2.ngrok-free.app';
 
 function App() {
   const [url, setUrl] = useState('');
